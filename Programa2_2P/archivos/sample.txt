@@ -1,0 +1,10 @@
+not(true and false);
+true;
+not not not;
+not(not true and not false);
+true and false;
+false;
+not false;
+true false;
+true false or;
+true false and or not;

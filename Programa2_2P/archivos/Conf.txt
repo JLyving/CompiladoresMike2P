@@ -1,0 +1,89 @@
+package fes.aragon.codigo;
+%%
+%public
+%class Lexico
+%line
+%char
+%column
+%full
+%type Tokens
+%{
+private boolean hayToken=false;
+public boolean getHayToken(){
+	return this.hayToken;
+}
+%}
+%type Tokens
+%init{
+	/*Codigo que se ejecuta en el constructor de la clase*/
+%init}
+%eof{
+	/*Codigo que se ejecuta al terminar el analisis*/
+	this.hayToken=false;
+%eof}
+BLANCO= [\n\t\s\r]
+
+%%
+{BLANCO} {
+	/*IGNORAR*/
+}
+
+";" {
+	Tokens tok=new Tokens(yytext(),Sym.FIN_INSTRUCCION,yyline,yycolumn);
+	this.hayToken=true;
+	return tok;
+}
+
+"true" {
+	Tokens tok=new Tokens(yytext(),Sym.TRUE,yyline,yycolumn);
+	this.hayToken=true;
+	return tok;
+}
+
+"false" {
+	Tokens tok=new Tokens(yytext(),Sym.FALSE,yyline,yycolumn);
+	this.hayToken=true;
+	return tok;
+}
+
+"or" {
+	Tokens tok=new Tokens(yytext(),Sym.OR,yyline,yycolumn);
+	this.hayToken=true;
+	return tok;
+}
+
+"and" {
+	Tokens tok=new Tokens(yytext(),Sym.AND, yyline, yycolumn);
+	this.hayToken=true;
+	return tok;
+}
+
+"not" {
+	Tokens tok=new Tokens(yytext(),Sym.NOT,yyline,yycolumn);
+	this.hayToken=true;
+	return tok;
+}
+
+"(" {
+	Tokens tok=new Tokens(yytext(),Sym.P_ABRE,yyline,yycolumn);
+	this.hayToken=true;
+	return tok;
+}
+
+")" {
+	Tokens tok=new Tokens(yytext(),Sym.P_CIERRA,yyline,yycolumn);
+	this.hayToken=true;
+	return tok;
+}
+
+
+{BLANCO} {
+	/*INGNORAR*/
+}
+
+. {
+        String errLex = "Error lexico : '"+yytext()+"' en la linea: "
+		+(yyline+1)+" y columna: "+(yycolumn+1);
+        System.out.println(errLex);
+	this.hayToken=false;
+}
