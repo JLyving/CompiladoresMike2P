@@ -36,7 +36,7 @@ public class Lexer {
                     tokens.add(new Token("PUNTOYCOMA", ";"));
                     break;
                 default:
-                    throw new RuntimeException("Invalid character: " + currentChar);
+                    throw new RuntimeException("Caracter no valido: " + currentChar);
             }
         }
         return tokens;
