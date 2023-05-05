@@ -1,71 +1,25 @@
 package fes.aragon.utilerias;
 
-import fes.aragon.utilerias.Sym;
-import fes.aragon.utilerias.Tokens;
 
 import java.io.IOException;
 
-import fes.aragon.utilerias.Lexico;
 
 public class Parser {
-	
-	private boolean error = true;
-	private Tokens tokens = null;
-	private Lexico obj = null;
-	
-	
-	//private final String input; // variable que almacena la entrada del usuario
-    //private int index; // variable que almacena la posición actual de la entrada que se está procesando
+	private final String input; // variable que almacena la entrada del usuario
+    private int index; // variable que almacena la posición actual de la entrada que se está procesando
 
-    public Parser(Lexico obj) { // constructor que inicializa las variables input y index
-        this.obj = obj;
-        
-        
+    public Parser(String input) { // constructor que inicializa las variables input y index
+        this.input = input;
+        this.index = 0;
     }
-    
-    private void siguienteToken() {
-		try {
-			tokens = obj.yylex();
-			if (tokens == null) {
-				tokens = new Tokens("EOF", Sym.EOF, 0, 0);
-				throw new IOException("Fin Archivo");
-			}
-		} catch (IOException ex) {
-			System.out.println(ex.getMessage());
-		}
 
-	}
-    
-    private void errorSintactico() {
-		this.error = false;
-		// descartar todo hasta encontrar ;
-		do {
-			System.out.println(tokens.toString());
-			if (tokens.getLexema() != Sym.FIN_INSTRUCCION) {
-				siguienteToken();
-			}
-		} while (tokens.getLexema() != Sym.FIN_INSTRUCCION && tokens.getLexema() != Sym.EOF);
-
-	}
-
-    public void parse() { // método que se encarga de ejecutar el análisis sintáctico
-    	do {
-    		try {
-			E();
-			if (tokens.getLexema() != Sym.FIN_INSTRUCCION) {
-				errorSintactico();
-				siguienteToken();
-			}
-			if (!this.error) {
-				System.out.println("Invalida linea= " + (tokens.getLinea() + 1));
-				this.error = true;
-			} else {
-				System.out.println("Valida  linea= " + (tokens.getLinea() + 1));
-			}
-			siguienteToken();
-    		} catch (ParseException e) { // si ocurre una excepción, se asume que la entrada no es válida
-    	           
-            }} while (tokens.getLexema() != Sym.EOF);
+    public boolean parse() { // método que se encarga de ejecutar el análisis sintáctico
+        try {
+            E(); // se inicia el análisis sintáctico desde la regla E
+            return index == input.length(); // se verifica si se llegó al final de la entrada
+        } catch (ParseException e) { // si ocurre una excepción, se asume que la entrada no es válida
+            return false;
+        }
     }
 
     private void E() throws ParseException { // método que implementa la regla E
@@ -74,7 +28,7 @@ public class Parser {
     }
 
     private void Eprima() throws ParseException { // método que implementa la regla E'
-        if (tokens.getLexema() == Sym.OR) { // si se encuentra el token "or" en la entrada
+        if (match("or")) { // si se encuentra el token "or" en la entrada
             T(); // se llama al método que implementa la regla T
             Eprima(); // se llama al método que implementa la regla E'
         }
@@ -108,8 +62,8 @@ public class Parser {
     }
 
     private boolean match(String token) { // método que verifica si el token dado se encuentra en la entrada
-        //if (index < input.length() && input.substring(index).startsWith(token)) { // si el token se encuentra en la entrada
-            //index += token.length(); // se actualiza la posición actual de la entrada que se está procesando
+        if (index < input.length() && input.substring(index).startsWith(token)) { // si el token se encuentra en la entrada
+            index += token.length(); // se actualiza la posición actual de la entrada que se está procesando
             skipWhitespace(); // se saltan los caracteres en blanco
             return true;
         }
@@ -118,7 +72,7 @@ public class Parser {
 
     private void skipWhitespace() {
         while (index < input.length() && Character.isWhitespace(input.charAt(index))) {
-           index++;
+            index++;
         }
     }
 
