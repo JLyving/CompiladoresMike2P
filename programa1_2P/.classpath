@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="Sintactico_V1/src"/>
+	<classpathentry kind="lib" path="Sintactico_V1/jar/jflex-full-1.7.0.jar"/>
+	<classpathentry kind="output" path="Sintactico_V1/build/classes"/>
+</classpath>
